@@ -43,4 +43,21 @@ def get_guru_photos_ids():
     return ids
 
 
-guru_download_photos('/home/matishadow/tmp/photos')
+def get_reddit_photos(path):
+    url = "https://www.reddit.com/user/hubblepen.json"
+
+    response = requests.request("GET", url, data="", headers={'User-agent': 'your bot 0.1'})
+
+    for child in response.json()['data']['children']:
+        url = child['data']['url']
+        if url.endswith(GURU_SHOTS_SUFFIX):
+            response = requests.get(url, stream=True)
+            response.raw.decode_content = True
+            file_name = url.split('/')[-1]
+            with open(f'{path}/{file_name}', 'wb') as out_file:
+                shutil.copyfileobj(response.raw, out_file)
+            del response
+
+
+#guru_download_photos('/home/matishadow/tmp/photos')
+get_reddit_photos('/home/matishadow/tmp/photos')
