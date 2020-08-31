@@ -1,43 +1,46 @@
-# This is a sample Python script.
+import requests
+import shutil
 
-# Press Ctrl+F5 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
+GURU_SHOTS_PREFIX = 'https://photos.gurushots.com/unsafe/0x0/05797d3a3394fa193a4986b0f86e87df/3_'
+GURU_SHOTS_SUFFIX = '.jpg'
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def guru_download_photos(path):
+    urls = []
+    ids = get_guru_photos_ids()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    for item in ids:
+        url = GURU_SHOTS_PREFIX + item + GURU_SHOTS_SUFFIX
+        response = requests.get(url, stream=True)
+        response.raw.decode_content = True
+        with open(f'{path}/{item}{GURU_SHOTS_SUFFIX}', 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
+
+    return urls
 
 
-# Example rest code
-import http.client
+def get_guru_photos_ids():
+    ids = []
 
-conn = http.client.HTTPSConnection("www.buycrash.com")
+    url = "https://gurushots.com/rest/get_photos_public"
 
-payload = ""
-
-headers = {
-    'authority': "www.buycrash.com",
-    'cache-control': "max-age=0",
-    'upgrade-insecure-requests': "1",
-    'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
-    'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    'sec-fetch-site': "cross-site",
-    'sec-fetch-mode': "navigate",
-    'sec-fetch-user': "?1",
-    'sec-fetch-dest': "document"
+    payload = "limit=8011&member_id=05797d3a3394fa193a4986b0f86e87df&sort=desc&start=0&type=photos"
+    headers = {
+        'cookie': "_tmid=5f4d3d0d2e2e5",
+        'x-api-version': "8",
+        'x-env': "WEB",
+        'content-type': "application/x-www-form-urlencoded",
+        'accept': "application/json, text/plain, */*",
+        'x-requested-with': "XMLHttpRequest"
     }
 
-conn.request("GET", "/", payload, headers)
+    response = requests.request("POST", url, data=payload, headers=headers)
 
-res = conn.getresponse()
-data = res.read()
+    for item in response.json()['items']:
+        ids.append(item['id'])
 
-print(data.decode("utf-8")n)
+    return ids
+
+
+guru_download_photos('/home/matishadow/tmp/photos')
