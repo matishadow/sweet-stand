@@ -1,11 +1,25 @@
+from pathlib import Path
+
 import requests
 import shutil
+import instaloader
 
 GURU_SHOTS_PREFIX = 'https://photos.gurushots.com/unsafe/0x0/05797d3a3394fa193a4986b0f86e87df/3_'
 GURU_SHOTS_SUFFIX = '.jpg'
+INSTA_ACCOUNT_NAME = 'hubble_bubble_photo'
 
 
-def guru_download_photos(path):
+def get_instagram_photos(path):
+    loader = instaloader.Instaloader(post_metadata_txt_pattern='', download_comments=False, save_metadata=False)
+
+    profile = instaloader.Profile.from_username(loader.context, INSTA_ACCOUNT_NAME)
+    posts = profile.get_posts()
+
+    for post in posts:
+        loader.download_post(post, target=Path(path))
+
+
+def get_guru_photos(path):
     urls = []
     ids = get_guru_photos_ids()
 
@@ -64,5 +78,9 @@ def get_reddit_photos(path):
             del response
 
 
-#guru_download_photos('/home/matishadow/tmp/photos')
-get_reddit_photos('/home/matishadow/tmp/photos')
+def get_all_photos(path):
+    get_guru_photos(path)
+    get_reddit_photos(path)
+    get_instagram_photos(path)
+
+get_all_photos('/home/matishadow/tmp/photos')
