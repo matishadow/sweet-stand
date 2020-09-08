@@ -49,7 +49,12 @@ def get_reddit_photos(path):
     response = requests.request("GET", url, data="", headers={'User-agent': 'your bot 0.1'})
 
     for child in response.json()['data']['children']:
-        url = child['data']['url']
+        data = child['data']
+
+        if 'url' not in data:
+            continue
+
+        url = data['url']
         if url.endswith(GURU_SHOTS_SUFFIX):
             response = requests.get(url, stream=True)
             response.raw.decode_content = True
