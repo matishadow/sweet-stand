@@ -30,7 +30,7 @@ def get_guru_photos(path):
         url = GURU_SHOTS_PREFIX + item + GURU_SHOTS_SUFFIX
         response = requests.get(url, stream=True)
         response.raw.decode_content = True
-        with open(f'{path}/{item}{GURU_SHOTS_SUFFIX}', 'wb') as out_file:
+        with open(f'{path}/guru.{item}{GURU_SHOTS_SUFFIX}', 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response
 
@@ -76,7 +76,7 @@ def get_reddit_photos(path):
         if url.endswith(GURU_SHOTS_SUFFIX):
             response = requests.get(url, stream=True)
             response.raw.decode_content = True
-            file_name = url.split('/')[-1]
+            file_name = 'reddit.' + url.split('/')[-1]
             with open(f'{path}/{file_name}', 'wb') as out_file:
                 shutil.copyfileobj(response.raw, out_file)
             del response
