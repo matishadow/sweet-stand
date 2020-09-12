@@ -1722,3 +1722,6 @@ curl 'https://gurushots.com/rest/get_photos_public' \
   "success": true
 }
 ----
+
+== feh command
+feh -qrYzFD120 -R 120 ~/Pictures
