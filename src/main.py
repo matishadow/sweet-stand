@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging
 
 import requests
 import shutil
@@ -10,6 +11,7 @@ INSTA_ACCOUNT_NAME = 'hubble_bubble_photo'
 
 
 def get_instagram_photos(path):
+    logging.info('downloading photos from instagram')
     loader = instaloader.Instaloader(post_metadata_txt_pattern='', download_comments=False, save_metadata=False)
 
     profile = instaloader.Profile.from_username(loader.context, INSTA_ACCOUNT_NAME)
@@ -20,6 +22,7 @@ def get_instagram_photos(path):
 
 
 def get_guru_photos(path):
+    logging.info('downloading photos from guru')
     urls = []
     ids = get_guru_photos_ids()
 
@@ -58,6 +61,7 @@ def get_guru_photos_ids():
 
 
 def get_reddit_photos(path):
+    logging.info('downloading photos from reddit')
     url = "https://www.reddit.com/user/hubblepen.json"
 
     response = requests.request("GET", url, data="", headers={'User-agent': 'your bot 0.1'})
@@ -82,5 +86,6 @@ def get_all_photos(path):
     get_guru_photos(path)
     get_reddit_photos(path)
     get_instagram_photos(path)
+
 
 get_all_photos('/home/matishadow/tmp/photos')
