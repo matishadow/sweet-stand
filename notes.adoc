@@ -1724,4 +1724,33 @@ curl 'https://gurushots.com/rest/get_photos_public' \
 ----
 
 == feh command
-feh -qrYzFD120 -R 120 ~/Pictures
+feh -qrYzFD120 -R 120 \~/Pictures
+
+== multiple wifi config
+https://raspberrypi.stackexchange.com/questions/11631/how-to-setup-multiple-wifi-networks
+
+== feh tutorial
+https://www.thedigitalpictureframe.com/the-best-3-image-viewers-for-your-raspberry-pi-digital-picture-frame-project/
+
+== cron
+=== every 30
+crontab -e
+
+\*/5 * * * *  python3 /home/pi/repos/sweet-stand/src/main.py
+
+== service
+....
+[Unit]
+Description=ROT13 demo service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=centos
+ExecStart=/usr/bin/env php /path/to/server.php
+
+[Install]
+WantedBy=multi-user.target
+....
