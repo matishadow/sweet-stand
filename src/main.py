@@ -88,4 +88,4 @@ def get_all_photos(path):
     get_instagram_photos(path)
 
 
-get_all_photos('/home/matishadow/tmp/photos')
+get_all_photos('/home/pi/Pictures')
