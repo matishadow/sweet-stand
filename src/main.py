@@ -18,7 +18,10 @@ def get_instagram_photos(path):
     posts = profile.get_posts()
 
     for post in posts:
-        loader.download_post(post, target=Path(path))
+        try:
+            loader.download_post(post, target=Path(path))
+        except:
+            pass
 
 
 def get_guru_photos(path):
@@ -27,12 +30,15 @@ def get_guru_photos(path):
     ids = get_guru_photos_ids()
 
     for item in ids:
-        url = GURU_SHOTS_PREFIX + item + GURU_SHOTS_SUFFIX
-        response = requests.get(url, stream=True)
-        response.raw.decode_content = True
-        with open(f'{path}/guru.{item}{GURU_SHOTS_SUFFIX}', 'wb') as out_file:
-            shutil.copyfileobj(response.raw, out_file)
-        del response
+        try:
+            url = GURU_SHOTS_PREFIX + item + GURU_SHOTS_SUFFIX
+            response = requests.get(url, stream=True)
+            response.raw.decode_content = True
+            with open(f'{path}/guru.{item}{GURU_SHOTS_SUFFIX}', 'wb') as out_file:
+                shutil.copyfileobj(response.raw, out_file)
+            del response
+        except:
+            pass
 
     return urls
 
@@ -55,7 +61,10 @@ def get_guru_photos_ids():
     response = requests.request("POST", url, data=payload, headers=headers)
 
     for item in response.json()['items']:
-        ids.append(item['id'])
+        try:
+            ids.append(item['id'])
+        except:
+            pass
 
     return ids
 
@@ -67,25 +76,37 @@ def get_reddit_photos(path):
     response = requests.request("GET", url, data="", headers={'User-agent': 'your bot 0.1'})
 
     for child in response.json()['data']['children']:
-        data = child['data']
+        try:
+            data = child['data']
 
-        if 'url' not in data:
-            continue
+            if 'url' not in data:
+                continue
 
-        url = data['url']
-        if url.endswith(GURU_SHOTS_SUFFIX):
-            response = requests.get(url, stream=True)
-            response.raw.decode_content = True
-            file_name = 'reddit.' + url.split('/')[-1]
-            with open(f'{path}/{file_name}', 'wb') as out_file:
-                shutil.copyfileobj(response.raw, out_file)
-            del response
+            url = data['url']
+            if url.endswith(GURU_SHOTS_SUFFIX):
+                response = requests.get(url, stream=True)
+                response.raw.decode_content = True
+                file_name = 'reddit.' + url.split('/')[-1]
+                with open(f'{path}/{file_name}', 'wb') as out_file:
+                    shutil.copyfileobj(response.raw, out_file)
+                del response
+        except:
+            pass
 
 
 def get_all_photos(path):
-    get_guru_photos(path)
-    get_reddit_photos(path)
-    get_instagram_photos(path)
+    try:
+        get_guru_photos(path)
+    except:
+        pass
+    try:
+        get_reddit_photos(path)
+    except:
+        pass
+    try:
+        get_instagram_photos(path)
+    except:
+        pass
 
 
 get_all_photos('/home/pi/Pictures')
