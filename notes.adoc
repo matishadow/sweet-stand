@@ -1737,6 +1737,7 @@ https://www.thedigitalpictureframe.com/the-best-3-image-viewers-for-your-raspber
 crontab -e
 
 \*/5 * * * *  python3 /home/pi/repos/sweet-stand/src/main.py
+\*/5 * * * *  git -C /home/pi/repos/sweet-stand/ pull
 
 == service
 ....
