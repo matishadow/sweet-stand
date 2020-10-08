@@ -7,7 +7,7 @@ import instaloader
 
 GURU_SHOTS_PREFIX = 'https://photos.gurushots.com/unsafe/0x0/05797d3a3394fa193a4986b0f86e87df/3_'
 GURU_SHOTS_SUFFIX = '.jpg'
-INSTA_ACCOUNT_NAME = 'hubble_bubble_photo'
+INSTA_ACCOUNT_NAME = 'daimons.photographt'
 
 
 def get_instagram_photos(path):
